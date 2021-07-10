@@ -27,6 +27,7 @@ end
 
 Client:  
 ```
+local resname,TriggerServerCallback = GetCurrentResourceName()
 TriggerServerCallback = function(name,fn,...)
     local resname = GetCurrentResourceName()
     local a 
@@ -43,4 +44,11 @@ TriggerServerCallback = function(name,fn,...)
     while not loaded do Wait(33) end 
     return 
 end 
+
+CreateThread(function()
+    TriggerServerCallback('servertime',function (...)
+                            print("Server Time",...)
+                        end)
+end)
+
 ```
