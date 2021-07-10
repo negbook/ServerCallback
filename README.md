@@ -9,7 +9,7 @@ RegisterServerCallback = function(name,fn)
     RegisterNetEvent(eventName)
     a = AddEventHandler(eventName, function (ticketClient,...)
         local source_ = source 
-        local ticketServer = GetGameTimer()
+        local ticketServer =  tostring(GetGameTimer())..tostring(math.random(0,65535))
         local eventWithTicket,b = eventName .. ticketClient .. ticketServer
         if source_ then eventWithTicket = eventWithTicket .. tostring(source_)..tostring(GetHashKey(GetPlayerName(source_))) 
             RegisterNetEvent(eventWithTicket)
@@ -38,17 +38,13 @@ TriggerServerCallback = function(name,fn,...)
     local resname = GetCurrentResourceName()
     local a 
     local hash = GetHashKey(name)
-    local loaded = false
-    local ticketClient = GetGameTimer()
+    local ticketClient = tostring(GetGameTimer())..tostring(NetworkGetRandomIntRanged(0,65535))
     RegisterNetEvent(resname..":"..hash..":".."ResultCallback"..ticketClient)
     a = AddEventHandler(resname..":"..hash..":".."ResultCallback"..ticketClient, function (...)
         fn(...)
         RemoveEventHandler(a)
-        loaded = true
     end)
     TriggerServerEvent(resname..":"..hash..":".."RequestCallback",ticketClient,...)
-    while not loaded do Wait(33) end 
-    return 
 end 
 
 CreateThread(function()
