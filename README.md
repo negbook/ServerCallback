@@ -8,19 +8,21 @@ RegisterServerCallback = function(name,fn)
     local eventName,a = resname..":"..hash..":".."RequestCallback"
     RegisterNetEvent(eventName)
     a = AddEventHandler(eventName, function (ticketClient,...)
-        local source = source 
+        local source_ = source 
         local ticketServer = GetGameTimer()
         local eventWithTicket,b = eventName .. ticketClient .. ticketServer
-        RegisterNetEvent(eventWithTicket)
-        b = AddEventHandler(eventWithTicket, function (ticketCl,...)
-            TriggerClientEvent(resname..":"..hash..":".."ResultCallback"..ticketCl,source,fn(...),...)
-            RemoveEventHandler(b)
-            CreateThread(function()
-                if RegisterServerCallback then RegisterServerCallback(name,fn) end 
-            end)
-        end) 
+        if source_ then eventWithTicket = eventWithTicket .. tostring(source_)..tostring(GetHashKey(GetPlayerName(source_))) 
+            RegisterNetEvent(eventWithTicket)
+            b = AddEventHandler(eventWithTicket, function (ticketCl,...)
+                TriggerClientEvent(resname..":"..hash..":".."ResultCallback"..ticketCl,source_,fn(...),...)
+                RemoveEventHandler(b)
+                CreateThread(function()
+                    if RegisterServerCallback then RegisterServerCallback(name,fn) end 
+                end)
+            end) 
+            TriggerEvent(eventWithTicket,ticketClient,...)
+        end 
         RemoveEventHandler(a)
-        TriggerEvent(eventWithTicket,ticketClient,...)
     end)
 end 
 
