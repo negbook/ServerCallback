@@ -51,8 +51,8 @@ end
 
 CreateThread(function()
     TriggerServerCallback('servertime',function (...)
-                            print("Server Time",...)
-                        end)
+        print("Server Time",...)
+    end)
 end)
 
 ```
