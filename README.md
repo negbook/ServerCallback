@@ -23,6 +23,10 @@ RegisterServerCallback = function(name,fn)
         TriggerEvent(eventWithTicket,ticketClient,...)
     end)
 end 
+
+RegisterServerCallback("servertime",function(...)
+    return os.date("%Y %m %d %H %M %S")
+end )
 ```
 
 Client:  
