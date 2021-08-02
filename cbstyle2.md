@@ -18,7 +18,7 @@ RegisterServerCallback = function(actionname,fn) -- NB.RegisterServerCallback('a
 					local c = function(x)
 						TriggerClientEvent(resname..":ResultCallback"..actionhashname..ticketCl,source_,x)
 					end 
-					fn(source_,c)
+					fn(source_,c,...)
 					if b then 
 						RemoveEventHandler(b)
 					end 
