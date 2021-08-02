@@ -11,7 +11,7 @@ RegisterServerCallback = function(actionname,fn) -- NB.RegisterServerCallback('a
 		
 		a = RegisterNetEvent(eventName, function (ticketClient,...) --client send datas into ...
 			local source_ = source 
-			local ticketServer =  tostring(GetGameTimer())..tostring(os.time())
+			local ticketServer =  tostring(GetGameTimer())..tostring(tostring(GetHashKey(os.time())) 
 			local eventWithTicket,b = eventName .. ticketClient .. ticketServer
 			if source_ then eventWithTicket = eventWithTicket .. tostring(source_)..tostring(GetHashKey(GetPlayerName(source_))) 
 				b = RegisterNetEvent(eventWithTicket, function (ticketCl,...)
@@ -45,7 +45,7 @@ TriggerServerCallback = function(actionname,fn,...)
 		local a 
 		local actionhashname = GetHashKey(actionname)
 		
-		local ticketClient = tostring(GetGameTimer())..tostring(GetCloudTimeAsInt())
+		local ticketClient = tostring(GetGameTimer())..tostring(tostring(GetHashKey(GetCloudTimeAsInt()))) .. tostring(GetIdOfThisThread())
 		a = RegisterNetEvent(resname..":ResultCallback"..actionhashname..ticketClient, function (...)
 			fn(...)
 			if a then  
