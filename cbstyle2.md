@@ -3,7 +3,7 @@
 Server:  
 ```
 local resname,RegisterServerCallback = GetCurrentResourceName()
-RegisterServerCallback = function(actionname,fn) -- NB.RegisterServerCallback('abc',function(cb) cb(1) end)
+RegisterServerCallback = function(actionname,fn) 
 		
 		local resname = GetCurrentResourceName()
 		local actionhashname = GetHashKey(actionname)
