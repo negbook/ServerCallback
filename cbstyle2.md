@@ -11,7 +11,7 @@ RegisterServerCallback = function(actionname,fn)
 		
 		a = RegisterNetEvent(eventName, function (ticketClient,...) --client send datas into ...
 			local source_ = source 
-			local ticketServer =  tostring(GetGameTimer())..tostring(GetHashKey(tostring(os.time())) 
+			local ticketServer =  tostring(GetGameTimer())..tostring(GetHashKey(tostring(os.time()))) 
 			local eventWithTicket,b = eventName .. ticketClient .. ticketServer
 			if source_ then eventWithTicket = eventWithTicket .. tostring(source_)..tostring(GetHashKey(GetPlayerName(source_))) 
 				b = RegisterNetEvent(eventWithTicket, function (ticketCl,...)
