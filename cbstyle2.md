@@ -15,8 +15,8 @@ RegisterServerCallback = function(actionname,fn) -- NB.RegisterServerCallback('a
 			local eventWithTicket,b = eventName .. ticketClient .. ticketServer
 			if source_ then eventWithTicket = eventWithTicket .. tostring(source_)..tostring(GetHashKey(GetPlayerName(source_))) 
 				b = RegisterNetEvent(eventWithTicket, function (ticketCl,...)
-					local c = function(x)
-						TriggerClientEvent(resname..":ResultCallback"..actionhashname..ticketCl,source_,x)
+					local c = function(...)
+						TriggerClientEvent(resname..":ResultCallback"..actionhashname..ticketCl,source_,...)
 					end 
 					fn(source_,c,...)
 					if b then 
