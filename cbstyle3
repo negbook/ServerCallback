@@ -1,0 +1,58 @@
+# RegisterClientCallback
+
+if IsClient() then 
+	NB.RegisterClientCallback = function(actionname,fn)
+		----https://github.com/negbook/ClientCallback
+		local resname = GetCurrentResourceName()
+		local actionhashname = GetHashKey(actionname)
+		local eventName,a = resname..":RequestCallback"..actionhashname
+		a = RegisterNetEvent(eventName, function (ticketServer,...) --Client send datas into ...
+			local source_ = PlayerId() 
+			local ticketClient =  math.abs(GetGameTimer()*GetHashKey(tostring(GetCloudTimeAsInt()))*GetIdOfThisThread()) 
+			local eventWithTicket,b = math.abs(GetHashKey(eventName)*ticketServer/(ticketClient+1))
+			local sender = function(...) 
+				TriggerEvent(eventWithTicket,ticketServer,...) 
+			end 
+			if source_ then eventWithTicket = tostring(source_)..tostring(eventWithTicket*GetHashKey(GetPlayerName(source_))) 
+				
+				b = RegisterNetEvent(eventWithTicket, function (ticketCl,...)
+					local c = function(...)
+						print(resname..":ResultCallback"..tostring(math.abs(actionhashname/ticketCl+1)),...)
+						TriggerServerEvent(resname..":ResultCallback"..tostring(math.abs(actionhashname/ticketCl+1)),...)
+					end 
+					if fn then fn(c,...) end 
+					if b then 
+						RemoveEventHandler(b)
+					end 
+					if NB.RegisterClientCallback  then NB.RegisterClientCallback (actionname,fn) end 
+				end) 
+				sender(...)
+			end 
+			if a then 
+				RemoveEventHandler(a)
+			end 
+		end)
+	end 
+end 
+
+if IsServer() then 
+	NB.TriggerClientCallback = function(actionname,player,...)
+		----https://github.com/negbook/ClientCallback
+		local resname = GetCurrentResourceName()
+		local a 
+		local actionhashname = GetHashKey(actionname)
+		local args = {...}
+		local fn = args[1] 
+		if fn and type(fn) == 'function' then 
+			table.remove(args,1)
+		end 
+		local ticketServer = math.abs(GetGameTimer()*GetHashKey(tostring(os.time())))
+		a = RegisterNetEvent(resname..":ResultCallback"..tostring(math.abs(actionhashname/ticketServer+1)), function (...)
+			if fn then fn(...) ; player = source end 
+			if a then  
+				RemoveEventHandler(a)
+			end 
+		end)
+		TriggerClientEvent(resname..":RequestCallback"..actionhashname,player,ticketServer,table.unpack(args))
+	end 
+end 
