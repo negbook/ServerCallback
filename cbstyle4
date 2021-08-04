@@ -1,0 +1,46 @@
+NB.RegisterServerCallback = function(actionname,fn)
+	----https://github.com/negbook/ServerCallback
+	local resname = GetCurrentResourceName()
+	local actionhashname = GetHashKey(actionname)
+	local eventName = resname..":RequestCallback"..actionhashname
+	RegisterNetEvent(eventName, function (ticketClient,...) --client send datas into ...
+		local source_ = source 
+		if NB._temp_.Currentticket ~= ticketClient then 
+			DropPlayer(
+				source_ , 
+				"Something is wrong" 
+			)
+		end 
+		NB._temp_.Currentticket = NB._temp_.Currentticket + 1
+		if source_ then 
+			local c = function(...)
+				TriggerClientEvent(resname..":ResultCallback"..tostring(ticketClient),source_,...)
+			end 
+			if fn then fn(source_,c,...) end 
+		end 
+	end)
+end
+
+
+NB.TriggerServerCallback = function(actionname,...)
+	----https://github.com/negbook/ServerCallback
+	local resname = GetCurrentResourceName()
+	local a 
+	local actionhashname = GetHashKey(actionname)
+	local args = {...}
+	local fn = args[1] 
+	if fn and type(fn) == 'function' then 
+		table.remove(args,1)
+	end 
+	local ticketClient = NB._temp_.Currentticket
+	NB._temp_.Currentticket = NB._temp_.Currentticket + 1
+	a = RegisterNetEvent(resname..":ResultCallback"..tostring(ticketClient), function (...)
+		if fn then fn(...) end 
+		if a then  
+			RemoveEventHandler(a)
+		end 
+	end)
+	
+	TriggerServerEvent(resname..":RequestCallback"..actionhashname,ticketClient,table.unpack(args))
+	
+end 
